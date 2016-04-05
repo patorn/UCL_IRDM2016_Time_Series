@@ -7,6 +7,6 @@ https://archive.ics.uci.edu/ml/datasets/Individual+household+electric+power+cons
 
 ## Group members are:
 
-Patorn Utenpattanun
-Muhammad Faiz Bin Mohd Zaki 
-Vincent Lim Shi Yong
+* Patorn Utenpattanun
+* Muhammad Faiz Bin Mohd Zaki 
+* Vincent Lim Shi Yong
