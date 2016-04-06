@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import csv
 
-def power_consumption(sequence_length=50, ratio=1.0, is_daily=False):
+def power_consumption(sequence_length, ratio=1.0, is_daily=False):
   path_to_dataset = 'data/household_power_consumption.csv'
 
   # Append lines to data array
