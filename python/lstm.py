@@ -20,14 +20,14 @@ def build_model(sequence_length):
   model.add(LSTM(
     input_dim=in_out_neurons,
     output_dim=hidden_neurons,
-    return_sequences=False))
+    return_sequences=True))
   model.add(Dropout(0.2))
 
-  # model.add(LSTM(
-  #   input_dim=hidden_neurons,
-  #   output_dim=hidden2_neurons,
-  #   return_sequences=False))
-  # model.add(Dropout(0.2))
+  model.add(LSTM(
+    input_dim=hidden_neurons,
+    output_dim=hidden2_neurons,
+    return_sequences=False))
+  model.add(Dropout(0.2))
 
   model.add(Dense(
     input_dim=hidden_neurons,
@@ -66,14 +66,14 @@ def main():
   model, y_test, predictions = run()
 
   # save for later use
-  model.save_weights('output/lstm.h5')
+  model.save_weights('../output/lstm.h5', overwrite=True)
 
   graph_utils.plot('lstm', predictions, y_test)
 
-  # RMSE: 0.2634
+  # xRMSE: 0.2616
   print('RMSE: %.4f'% metrics.rmse(predictions, y_test))
 
-  # MAPE: 0.0050
+  # MAPE: 0.0180
   print('MAPE: %.4f'% metrics.mape(predictions, y_test))
 
 if __name__ == '__main__':

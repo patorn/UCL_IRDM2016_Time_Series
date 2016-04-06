@@ -3,7 +3,7 @@ import pandas as pd
 import csv
 
 def power_consumption(sequence_length, ratio=1.0, is_daily=False):
-  path_to_dataset = 'data/household_power_consumption.csv'
+  path_to_dataset = '../data/household_power_consumption.csv'
 
   # Append lines to data array
   df = pd.read_csv(path_to_dataset, delimiter=';')

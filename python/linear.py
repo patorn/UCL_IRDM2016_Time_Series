@@ -32,10 +32,10 @@ def main():
 
   graph_utils.plot('linear', predictions, y_test)
 
-  # RMSE: 0.2633
+  # RMSE: 0.2632
   print('RMSE: %.4f'% metrics.rmse(predictions, y_test))
 
-  # MAPE: 0.0065
+  # MAPE: 0.0156
   print('MAPE: %.4f'% metrics.mape(predictions, y_test))
 
 if __name__ == '__main__':
