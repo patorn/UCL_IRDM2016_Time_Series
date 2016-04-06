@@ -51,6 +51,7 @@ def run_network(epochs=1, sequence_length=50, ratio=0.5, is_daily=False):
   try:
     model.fit(X_train, y_train, batch_size=512, nb_epoch=epochs, validation_split=0.05)
     predictions = model.predict(X_test)
+    predictions = np.reshape(predictions, (predictions.size,))
   except KeyboardInterrupt:
     print('Training duration (s) : ', time.time() - global_start_time)
     return model, y_test, 0
