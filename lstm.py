@@ -11,21 +11,25 @@ import metrics as metrics
 
 def build_model():
   model = Sequential()
-  layers = [1, 50, 100, 1]
+  in_out_neurons = 1
+  hidden_neurons = 50
+  hidden2_neurons = 100
 
   model.add(LSTM(
-    input_dim=layers[0],
-    output_dim=layers[1],
+    input_dim=in_out_neurons,
+    output_dim=hidden_neurons,
     return_sequences=True))
   model.add(Dropout(0.2))
 
   model.add(LSTM(
-    layers[2],
+    input_dim=hidden_neurons,
+    output_dim=hidden2_neurons,
     return_sequences=False))
   model.add(Dropout(0.2))
 
   model.add(Dense(
-    output_dim=layers[3]))
+    input_dim=hidden2_neurons,
+    output_dim=in_out_neurons))
   model.add(Activation("linear"))
 
   start = time.time()
@@ -33,7 +37,7 @@ def build_model():
   print("Compilation Time : ", time.time() - start)
   return model
 
-def run_model(epochs=1, sequence_length=50, ratio=0.5, is_daily=False):
+def run_network(epochs=1, sequence_length=50, ratio=0.5, is_daily=False):
   global_start_time = time.time()
 
   print('Loading data...')
@@ -66,7 +70,7 @@ def plot(predictions, true_labels):
     print(str(e))
 
 def main():
-  model, y_test, predictions = run_model()
+  model, y_test, predictions = run_network()
 
   # save for later use
   model.save_weights('output/lstm.h5')
