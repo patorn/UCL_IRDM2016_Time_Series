@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import csv
 
-def power_consumption(sequence_length, ratio=1.0, is_daily=False):
+def power_consumption(sequence_length, ratio=1.0):
   path_to_dataset = '../data/household_power_consumption.csv'
 
   # Append lines to data array
@@ -10,10 +10,17 @@ def power_consumption(sequence_length, ratio=1.0, is_daily=False):
   df = df.replace('?', np.nan)
   df = df.dropna()
   df['Global_active_power'] = pd.to_numeric(df['Global_active_power'])
-  df_gap = df[['Date', 'Global_active_power']]
-  # daily
-  if is_daily:
-    df_gap = df_gap.groupby('Date').aggregate(sum)
+  df_gap = df[['Global_active_power']]
+
+  # # uncomment for daily data
+  # df_gap = df_gap.groupby('Date').aggregate(sum)
+
+  # # uncomment for hourly data
+  # df['Date_Time'] = df['Date'] + ' ' + df['Time']
+  # df_gap = df[['Date_Time', 'Global_active_power']]
+  # times = pd.DatetimeIndex(df_gap.Date_Time)
+  # df_gap = df_gap.groupby([times.date, times.hour]).aggregate(sum)
+
   gap_data = df_gap.Global_active_power.values
   data = gap_data[:int(ratio * len(gap_data))]
 

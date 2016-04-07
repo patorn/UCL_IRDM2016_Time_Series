@@ -15,17 +15,10 @@ def build_model(sequence_length):
   model = Sequential()
   in_out_neurons = 1
   hidden_neurons = sequence_length
-  hidden2_neurons = sequence_length * 2
 
   model.add(LSTM(
     input_dim=in_out_neurons,
     output_dim=hidden_neurons,
-    return_sequences=True))
-  model.add(Dropout(0.2))
-
-  model.add(LSTM(
-    input_dim=hidden_neurons,
-    output_dim=hidden2_neurons,
     return_sequences=False))
   model.add(Dropout(0.2))
 
@@ -39,11 +32,11 @@ def build_model(sequence_length):
   print("Compilation Time : ", time.time() - start)
   return model
 
-def run(epochs=1, sequence_length=50, ratio=0.5, is_daily=False):
+def run(epochs=1, sequence_length=50, ratio=0.5):
   global_start_time = time.time()
 
   print('Loading data...')
-  X_train, y_train, X_test, y_test = data_utils.power_consumption(sequence_length, ratio, is_daily)
+  X_train, y_train, X_test, y_test = data_utils.power_consumption(sequence_length, ratio)
 
   print('Compiling model...')
 
@@ -51,7 +44,7 @@ def run(epochs=1, sequence_length=50, ratio=0.5, is_daily=False):
 
   print('Fitting data...')
   try:
-    early_stopping = EarlyStopping(monitor='val_loss', patience=2)
+    early_stopping = EarlyStopping()
     model.fit(X_train, y_train, batch_size=100, nb_epoch=epochs, validation_split=0.05, show_accuracy=True, callbacks=[early_stopping])
     predictions = model.predict(X_test)
     predictions = np.reshape(predictions, (predictions.size,))
@@ -63,18 +56,33 @@ def run(epochs=1, sequence_length=50, ratio=0.5, is_daily=False):
   return model, y_test, predictions
 
 def main():
+  # minute
   model, y_test, predictions = run()
+  # hourly
+  # model, y_test, predictions = run(30, 50, 1.0)
+  # daily
+  # model, y_test, predictions = run(100, 50, 1.0)
 
   # save for later use
   model.save_weights('../output/lstm.h5', overwrite=True)
+  # model.load_weights('../output/lstm.h5')
 
   graph_utils.plot('lstm', predictions, y_test)
 
-  # xRMSE: 0.2616
   print('RMSE: %.4f'% metrics.rmse(predictions, y_test))
-
-  # MAPE: 0.0180
   print('MAPE: %.4f'% metrics.mape(predictions, y_test))
+
+  # minute
+  # RMSE: 0.2616
+  # MAPE: 26.15
+
+  # hourly
+  # RMSE: 31.3330
+  # MAPE: 204.5651
+
+  # daily
+  # RMSE: 519.3943
+  # MAPE: 98.1580
 
 if __name__ == '__main__':
   main()
