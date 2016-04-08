@@ -15,7 +15,7 @@ tmp_data$Global_active_power <- na.locf(tmp_data$Global_active_power, fromLast =
 #convert column to numeric
 tmp_data$Global_active_power <- as.numeric(as.character(tmp_data$Global_active_power))
 
-#aggregate data by month
+#aggregate data by day
 data_byDay <- agg_by_day(tmp_data)
 
 #create time series object
