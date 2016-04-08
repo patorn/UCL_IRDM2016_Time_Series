@@ -1,17 +1,18 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+import sys
 import data_utils as data_utils
 import graph_utils as graph_utils
 import metrics as metrics
 
 from sklearn.linear_model import LinearRegression
 
-def run(sequence_length=50, ratio=0.5):
+def run(path_to_dataset, sequence_length=50, ratio=0.5):
   global_start_time = time.time()
 
   print('Loading data...')
-  X_train, y_train, X_test, y_test = data_utils.power_consumption(sequence_length, ratio)
+  X_train, y_train, X_test, y_test = data_utils.power_consumption(path_to_dataset, sequence_length, ratio)
   X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1]))
   X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1]))
 
@@ -27,13 +28,21 @@ def run(sequence_length=50, ratio=0.5):
   print('Training duration (s) : ', time.time() - global_start_time)
   return y_test, predictions
 
+# How to run
+# python lstm.py daily
 def main():
-  # minute
-  y_test, predictions = run()
-  # hourly
-  # y_test, predictions = run(50, 1.0)
-  # daily
-  # y_test, predictions = run(50, 1.0)
+  if sys.argv[1] == 'daily':
+    print('Using daily data...')
+    path_to_dataset = '../data/household_power_consumption_daily.csv'
+    y_test, predictions = run(path_to_dataset, 50, 1.0)
+  elif sys.argv[1] == 'hourly':
+    print('Using hourly data...')
+    path_to_dataset = '../data/household_power_consumption_hourly.csv'
+    y_test, predictions = run(path_to_dataset, 50, 1.0)
+  else:
+    print('Using minute data...')
+    path_to_dataset = '../data/household_power_consumption.csv'
+    y_test, predictions = run(path_to_dataset)
 
   graph_utils.plot('linear', predictions, y_test)
 

@@ -1,20 +1,22 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-from keras.layers.core import Dense, Activation, Dropout
-from keras.layers.recurrent import LSTM
-from keras.models import Sequential
-from keras.callbacks import EarlyStopping
-import h5py # for model.save_weights
+import sys
 
 import data_utils as data_utils
 import graph_utils as graph_utils
 import metrics as metrics
 
-def build_model(sequence_length):
+import h5py # for model.save_weights
+from keras.layers.core import Dense, Activation, Dropout
+from keras.layers.recurrent import LSTM
+from keras.models import Sequential
+from keras.callbacks import EarlyStopping
+
+def build_model():
   model = Sequential()
   in_out_neurons = 1
-  hidden_neurons = sequence_length
+  hidden_neurons = 50
 
   model.add(LSTM(
     input_dim=in_out_neurons,
@@ -32,15 +34,15 @@ def build_model(sequence_length):
   print("Compilation Time : ", time.time() - start)
   return model
 
-def run(epochs=1, sequence_length=50, ratio=0.5):
+def run(path_to_dataset, epochs=1, sequence_length=50, ratio=0.5):
   global_start_time = time.time()
 
   print('Loading data...')
-  X_train, y_train, X_test, y_test = data_utils.power_consumption(sequence_length, ratio)
+  X_train, y_train, X_test, y_test = data_utils.power_consumption(path_to_dataset, sequence_length, ratio)
 
   print('Compiling model...')
 
-  model = build_model(sequence_length)
+  model = build_model()
 
   print('Fitting data...')
   try:
@@ -55,13 +57,21 @@ def run(epochs=1, sequence_length=50, ratio=0.5):
   print('Training duration (s) : ', time.time() - global_start_time)
   return model, y_test, predictions
 
+# How to run
+# python lstm.py daily
 def main():
-  # minute
-  model, y_test, predictions = run()
-  # hourly
-  # model, y_test, predictions = run(30, 50, 1.0)
-  # daily
-  # model, y_test, predictions = run(100, 50, 1.0)
+  if sys.argv[1] == 'daily':
+    print('Using daily data...')
+    path_to_dataset = '../data/household_power_consumption_daily.csv'
+    model, y_test, predictions = run(path_to_dataset, 10, 50, 1.0)
+  elif sys.argv[1] == 'hourly':
+    print('Using hourly data...')
+    path_to_dataset = '../data/household_power_consumption_hourly.csv'
+    model, y_test, predictions = run(path_to_dataset, 30, 50, 1.0)
+  else:
+    print('Using minute data...')
+    path_to_dataset = '../data/household_power_consumption.csv'
+    model, y_test, predictions = run(path_to_dataset)
 
   # save for later use
   model.save_weights('../output/lstm.h5', overwrite=True)

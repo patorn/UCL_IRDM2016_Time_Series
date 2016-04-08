@@ -2,9 +2,7 @@ import numpy as np
 import pandas as pd
 import csv
 
-def power_consumption(sequence_length, ratio=1.0):
-  path_to_dataset = '../data/household_power_consumption.csv'
-
+def power_consumption(path_to_dataset, sequence_length, ratio=1.0):
   # Append lines to data array
   df = pd.read_csv(path_to_dataset, delimiter=';')
   df = df.replace('?', np.nan)
@@ -34,7 +32,9 @@ def power_consumption(sequence_length, ratio=1.0):
 
   # Normalise data by mean
   result_mean = result.mean()
+  result_std = result.std()
   result -= result_mean
+  result /= result_std
   print("Shift : ", result_mean)
   print("Data  : ", result.shape)
 
