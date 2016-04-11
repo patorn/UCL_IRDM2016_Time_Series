@@ -15,3 +15,9 @@ agg_by_month <- function(originaldata){
   byMonth <- rename(byMonth, c("Group.1"="Month"))
   return(byMonth)
 }
+
+#aggregate hourly
+apply.hourly <- function(x, FUN,...) {
+  ep <- endpoints(x, 'hours')
+  period.apply(x, ep, FUN, ...)
+}
