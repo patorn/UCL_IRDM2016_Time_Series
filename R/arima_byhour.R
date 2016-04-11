@@ -1,4 +1,5 @@
 source("Utils.R")
+library(xts, zoo, forecast)
 
 #read dataset
 data<-read.table("household_power_consumption.txt", header=T, sep=";")
@@ -28,14 +29,14 @@ data_byHour <- apply.hourly(tmp_dataXTS, sum)
 data_byHour = align.time(data_byHour,60)
 
 #split
-xtsDay_test <- data_byHour[c(1:1000),]
-xtsDay_actual <- data_byHour[c(1001:1025),]
+xtsDay_test <- data_byHour[c(1:49),]
+xtsDay_actual <- data_byHour[c(50:51),]
 
 
 #forecast and plot
 fit <- auto.arima(xtsDay_test)
-pred <- forecast(fit, h=25)
-plot(pred)
+pred <- forecast(fit, h=1)
+plot(pred, main="ARIMA Hourly Forecast")
 lines(fitted(fit), col="red")
 
 
@@ -46,3 +47,8 @@ eval <- accuracy(pred, xtsDay_actual)
 forecastValues <- fitted(fit)
 forecastValues <- data.frame(forecastValues)
 forecastValues <- rename(forecastValues, c("forecastValues"="Forecasted Value"))
+forecastValues$"Forecasted Value" <- as.numeric(forecastValues$"Forecasted Value")
+forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[1])
+
+actualValues <- data.frame(data_byHour[c(1:50),])
+actualValues <- rename(actualValues, c("data_byHour.c.1.50...."="Actual Value"))

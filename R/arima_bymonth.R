@@ -25,7 +25,7 @@ tsMonth_actual <- ts(data_byMonth[43:48,2],frequency=12, start=c(2010,6))
 #forecast and plot
 fit <- auto.arima(tsMonth_test)
 pred <- forecast(fit, h=6)
-plot(pred)
+plot(pred, main="ARIMA Monthly Forecast")
 lines(fitted(fit), col="red")
 lines(tsMonth_actual, col="green")
 
@@ -33,10 +33,17 @@ lines(tsMonth_actual, col="green")
 eval <- accuracy(pred, tsMonth_actual)
 
 #copy actual and forecasted readings into data frame
-actualValues <- tsMonth_actual
-actualValues <- data.frame(actualValues)
-actualValues <- rename(actualValues, c("actualValues"="Actual Value"))
+actualValues <- data.frame(data_byMonth[,])
 
-forecastValues <- pred
+forecastValues <- fitted(fit)
 forecastValues <- data.frame(forecastValues)
-forecastValues <- rename(forecastValues, c("Point.Forecast"="Forecasted Value"))
+forecastValues <- rename(forecastValues, c("forecastValues"="Forecasted Value"))
+forecastValues$"Forecasted Value" <- as.numeric(forecastValues$"Forecasted Value")
+
+#copy each forecast
+forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[1])
+forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[2])
+forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[3])
+forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[4])
+forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[5])
+forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[6])
