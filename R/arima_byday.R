@@ -25,7 +25,7 @@ lines(fitted(fit), col="red")
 eval <- accuracy(pred, tsDay_actual[1])
 
 #copy actual and forecasted readings into data frame
-actualValues <- data.frame(data_byDay[c(1:50),])
+actualValues <- data.frame(tmp_data[c(1:50),])
 
 forecastValues <- fitted(fit)
 forecastValues <- data.frame(forecastValues)
