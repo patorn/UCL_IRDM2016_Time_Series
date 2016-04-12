@@ -1,8 +1,8 @@
 #function to aggregate by day
 agg_by_day <- function(originaldata) {
-  meanByDay <- function(x) c(sum = sum(x))
+  sumByDay <- function(x) c(sum = sum(x))
   originaldata$Date <- as.Date(originaldata$Date, "%d/%m/%Y")
-  byDay <- aggregate(Global_active_power ~ Date, originaldata, meanByDay)
+  byDay <- aggregate(Global_active_power ~ Date, originaldata, sumByDay)
   return(byDay)
 }
 
