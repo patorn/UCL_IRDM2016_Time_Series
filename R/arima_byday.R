@@ -12,26 +12,35 @@ tmp_data$Global_active_power <- na.locf(tmp_data$Global_active_power, fromLast =
 
 
 #create time series object
-tsDay_test <- ts(tmp_data[1:49,2],frequency=58, start=c(2006,12), end=c(2007,2))
-tsDay_actual <- ts(tmp_data[50:51,2],frequency=7, start=c(2007,2))
+tsDay_test <- ts(tmp_data[1:1400,2],frequency=350, start=c(2006,12), end=c(2010,10))
+tsDay_actual <- ts(tmp_data[1401:1442,2],frequency=28, start=c(2010,10))
 
 #forecast and plot
 fit <- auto.arima(tsDay_test)
-pred <- forecast(fit, h=1)
+pred <- forecast(fit, h=42)
 plot(pred, main="ARIMA Daily Forecast")
 lines(fitted(fit), col="red")
 
 #eval
-eval <- accuracy(pred, tsDay_actual[1])
+eval <- accuracy(pred, tsDay_actual[1:42])
 
 #copy actual and forecasted readings into data frame
-actualValues <- data.frame(tmp_data[c(1:50),])
+actualValues <- data.frame(tmp_data[c(1:1442),])
 
 forecastValues <- fitted(fit)
 forecastValues <- data.frame(forecastValues)
 forecastValues <- rename(forecastValues, c("forecastValues"="Forecasted_Value"))
 forecastValues$Forecasted_Value <- as.numeric(forecastValues$Forecasted_Value)
-forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[1])
+
+i = 1
+while(i < 43){
+  forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[i]);
+  if( i == 42){
+    forecastValues[nrow(forecastValues) + 1,]<-c(pred$mean[i]);
+  }
+  i = i + 1
+}
+
 
 
 

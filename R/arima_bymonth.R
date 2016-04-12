@@ -25,7 +25,7 @@ lines(tsMonth_actual, col="green")
 eval <- accuracy(pred, tsMonth_actual)
 
 #copy actual and forecasted readings into data frame
-actualValues <- tmp_data[1:48,]
+actualValues <- tmp_data[1:49,]
 
 forecastValues <- fitted(fit)
 forecastValues <- data.frame(forecastValues)
