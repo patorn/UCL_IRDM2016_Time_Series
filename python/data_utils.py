@@ -39,9 +39,7 @@ def power_consumption(path_to_dataset, sequence_length, ratio=1.0):
 
   # Normalise data by mean
   result_mean = result.mean()
-  result_std = result.std()
   result -= result_mean
-  result /= result_std
   print("Shift : ", result_mean)
   print("Data  : ", result.shape)
 
