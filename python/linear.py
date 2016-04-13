@@ -35,6 +35,10 @@ def main():
     print('Using daily data...')
     path_to_dataset = '../data/household_power_consumption_daily.csv'
     y_test, predictions = run(path_to_dataset, 50, 1.0)
+  elif sys.argv[1] == 'monthly':
+    print('Using monthly data...')
+    path_to_dataset = '../data/household_power_consumption_monthly.csv'
+    y_test, predictions = run(path_to_dataset, 5, 1.0)
   elif sys.argv[1] == 'hourly':
     print('Using hourly data...')
     path_to_dataset = '../data/household_power_consumption_hourly.csv'

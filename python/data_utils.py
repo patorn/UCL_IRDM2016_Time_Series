@@ -2,13 +2,15 @@ import numpy as np
 import pandas as pd
 import csv
 
+np.random.seed(1234)
+
 def power_consumption(path_to_dataset, sequence_length, ratio=1.0):
   # Append lines to data array
   df = pd.read_csv(path_to_dataset, delimiter=';')
   df = df.replace('?', np.nan)
   df = df.dropna()
   df['Global_active_power'] = pd.to_numeric(df['Global_active_power'])
-  df_gap = df[['Global_active_power']]
+  df_gap = df[['Date', 'Global_active_power']]
 
   # # uncomment for daily data
   # df_gap = df_gap.groupby('Date').aggregate(sum)
@@ -18,6 +20,11 @@ def power_consumption(path_to_dataset, sequence_length, ratio=1.0):
   # df_gap = df[['Date_Time', 'Global_active_power']]
   # times = pd.DatetimeIndex(df_gap.Date_Time)
   # df_gap = df_gap.groupby([times.date, times.hour]).aggregate(sum)
+
+  # # uncomment for monthly data
+  # df_gap = df[['Date', 'Global_active_power']]
+  # times = pd.DatetimeIndex(df.Date)
+  # df_gap = df_gap.groupby(times.to_period("M")).aggregate(sum)
 
   gap_data = df_gap.Global_active_power.values
   data = gap_data[:int(ratio * len(gap_data))]
