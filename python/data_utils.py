@@ -10,7 +10,7 @@ def power_consumption(path_to_dataset, sequence_length, ratio=1.0):
   df = df.replace('?', np.nan)
   df = df.dropna()
   df['Global_active_power'] = pd.to_numeric(df['Global_active_power'])
-  df_gap = df[['Date', 'Global_active_power']]
+  df_gap = df[['Global_active_power']]
 
   # # uncomment for daily data
   # df_gap = df_gap.groupby('Date').aggregate(sum)
